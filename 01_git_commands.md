@@ -253,3 +253,205 @@ git commit -m "Resolved conflicts between dev and main"
 Git ist ein mächtiges Werkzeug, das die Zusammenarbeit und das Versionsmanagement in Softwareprojekten erheblich erleichtert. Diese grundlegende Dokumentation bietet einen Einstieg in die wichtigsten Konzepte und Befehle. Für eine tiefere Einarbeitung empfiehlt es sich, die [offizielle Git-Dokumentation](https://git-scm.com/doc) zu konsultieren.
 
 Git is a powerful tool that significantly facilitates collaboration and version management in software projects. This basic documentation provides an introduction to the key concepts and commands. For deeper understanding, it is recommended to consult the [official Git documentation](https://git-scm.com/doc).
+
+</br>
+</br>
+
+------------
+------------
+# Änderungen von `main` in den `dev` Branch mergen, während man sich im `dev` Branch befindet / Merging changes from `main` into the `dev` branch while staying in the `dev` branch
+
+## Anleitung / Instructions
+
+### Schritt-für-Schritt-Anleitung / Step-by-step Instructions
+
+1. Stelle sicher, dass du dich im `dev` Branch befindest:
+   Ensure that you are in the `dev` branch:
+   ```sh
+   git branch
+   ```
+
+   Der aktuelle Branch wird mit einem Sternchen (*) markiert. Falls `dev` nicht der aktuelle Branch ist, wechsle zu `dev`:
+   The current branch is marked with an asterisk (*). If `dev` is not the current branch, switch to `dev`:
+   ```sh
+   git switch dev
+   ```
+
+2. Hole die neuesten Änderungen aus dem `main` Branch, ohne den `dev` Branch zu verlassen:
+   Fetch the latest changes from the `main` branch without leaving the `dev` branch:
+   ```sh
+   git fetch origin main
+   ```
+
+3. Merg die Änderungen vom `main` Branch in den `dev` Branch:
+   Merge the changes from the `main` branch into the `dev` branch:
+   ```sh
+   git merge origin/main
+   ```
+
+Falls es Merge-Konflikte gibt, wirst du diese manuell lösen müssen. Nachdem die Konflikte gelöst sind, markierst du sie als gelöst und commitest die Änderungen.
+
+If there are merge conflicts, you will need to resolve them manually. After resolving the conflicts, mark them as resolved and commit the changes.
+
+```sh
+git add <datei-mit-konflikt>
+git commit -m "Konflikte gelöst zwischen dev und main"
+git commit -m "Resolved conflicts between dev and main"
+```
+
+</br>
+</br>
+
+------------
+------------
+# Anleitung zum Ändern einer Commit-Mitteilung
+
+Es kann vorkommen, dass eine Commit-Nachricht unklare, falsche oder vertrauliche Informationen enthält. In solchen Fällen kannst du die Nachricht lokal ändern und den Commit mit einer neuen Nachricht zu GitHub pushen. Hier ist eine detaillierte Anleitung für verschiedene Szenarien.
+
+## Die letzte Commit-Mitteilung ändern
+
+### Schritt-für-Schritt-Anleitung
+
+1. **Navigiere in der Befehlszeile zu dem Repository, das den Commit enthält, den du ändern möchtest:**
+   ```sh
+   cd /pfad/zu/deinem/repository
+   ```
+
+2. **Ändere die Commit-Nachricht mit dem Befehl `git commit --amend`:**
+   ```sh
+   git commit --amend
+   ```
+   Dies öffnet den Standard-Texteditor, in dem du die Commit-Mitteilung bearbeiten kannst.
+
+3. **Bearbeite die Commit-Nachricht, speichere die Datei und schließe den Editor.**
+
+4. **Falls der Commit noch nicht online veröffentlicht wurde, kannst du einfach die Änderungen pushen:**
+   ```sh
+   git push origin branch-name
+   ```
+
+5. **Falls der Commit bereits veröffentlicht wurde, musst du den Push erzwingen:**
+   ```sh
+   git push --force-with-lease origin branch-name
+   ```
+
+### Beispiel:
+```sh
+cd /pfad/zu/deinem/repository
+git commit --amend
+# Bearbeite die Commit-Nachricht im Editor
+# Speichere und schließe den Editor
+git push --force-with-lease origin branch-name
+```
+
+## Ältere oder mehrere Commit-Mitteilungen ändern
+
+### Schritt-für-Schritt-Anleitung
+
+1. **Navigiere in der Befehlszeile zu dem Repository, das den Commit enthält, den du ändern möchtest:**
+   ```sh
+   cd /pfad/zu/deinem/repository
+   ```
+
+2. **Verwende den Befehl `git rebase -i HEAD~n`, um eine Liste der letzten n Commits anzuzeigen:**
+   ```sh
+   git rebase -i HEAD~3
+   ```
+   Dies zeigt die letzten 3 Commits im Standard-Texteditor an.
+
+3. **Ersetze vor jeder Commit-Nachricht, die du ändern möchtest, `pick` durch `reword`:**
+   ```
+   pick e499d89 Delete CNAME
+   reword 0c39034 Better README
+   reword f7fde4a Change the commit message but push the same commit.
+   ```
+
+4. **Speichere die Datei und schließe den Editor.**
+
+5. **Bearbeite in den resultierenden Commit-Dateien die Commit-Mitteilungen, speichere die Dateien und schließe den Editor.**
+
+6. **Erzwinge den Push der Änderungen zu GitHub:**
+   ```sh
+   git push --force origin branch-name
+   ```
+
+### Beispiel:
+```sh
+cd /pfad/zu/deinem/repository
+git rebase -i HEAD~3
+# Ersetze `pick` durch `reword` bei den zu ändernden Commits
+# Speichere und schließe den Editor
+# Bearbeite die Commit-Nachrichten in den resultierenden Dateien
+git push --force origin branch-name
+```
+
+## Hinweise
+
+- **Erzwungener Push:** Beim Erzwingen eines Pushs (`--force` oder `--force-with-lease`) wird der Verlauf des Repositorys geändert, was dazu führen kann, dass andere Entwickler, die das Repository bereits geklont haben, ihre lokalen Kopien manuell korrigieren müssen.
+- **Interaktives Rebase:** Ein interaktives Rebase ermöglicht das Ändern der Commit-Nachrichten mehrerer Commits. Weitere Informationen dazu findest du im Git-Handbuch unter [Interaktiver Modus](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History).
+
+Diese Anleitung hilft dir, Commit-Nachrichten sowohl für den letzten als auch für ältere Commits zu ändern und diese Änderungen korrekt zu GitHub zu pushen.
+
+</br>
+</br>
+
+------------
+------------
+
+# Anleitung: Wie man den Git-Commit-Editor schließt
+
+Wenn du den Befehl `git commit` ausführst, öffnet sich ein Editor, in dem du die Commit-Nachricht eingeben kannst. Um diesen Editor zu schließen und den Commit abzuschließen, folge den untenstehenden Schritten. Diese Anleitung umfasst gängige Editoren wie Vim und Nano, die häufig als Standard-Editoren für Git konfiguriert sind.
+
+## Schließen des Git-Commit-Editors in verschiedenen Editoren
+
+### Vim
+Vim ist ein weit verbreiteter Texteditor in Unix-ähnlichen Systemen. Hier ist, wie du ihn schließen kannst:
+
+1. **Bearbeiten der Commit-Nachricht beenden**:
+   - Drücke `Esc`, um den Bearbeitungsmodus zu verlassen.
+
+2. **Datei speichern und Editor schließen**:
+   - Gib `:wq` ein und drücke `Enter`.
+     - `:w` speichert die Datei.
+     - `:q` schließt den Editor.
+
+### Nano
+Nano ist ein einfach zu bedienender Editor, der ebenfalls häufig verwendet wird.
+
+1. **Bearbeiten der Commit-Nachricht beenden und Datei speichern**:
+   - Drücke `Ctrl + O` (das O steht für "Write Out", also speichern).
+   - Drücke `Enter`, um den Dateinamen zu bestätigen.
+
+2. **Editor schließen**:
+   - Drücke `Ctrl + X`.
+
+### Emacs
+Emacs ist ein weiterer weit verbreiteter Editor, besonders in der Unix- und Linux-Welt.
+
+1. **Bearbeiten der Commit-Nachricht beenden und Datei speichern**:
+   - Drücke `Ctrl + X` gefolgt von `Ctrl + S` (speichern).
+
+2. **Editor schließen**:
+   - Drücke `Ctrl + X` gefolgt von `Ctrl + C`.
+
+## Vermeiden des Editors mit `-m` Option
+Wenn du den Editor komplett vermeiden möchtest, kannst du die Commit-Nachricht direkt im Commit-Befehl angeben:
+
+```sh
+git commit -m "Meine Commit-Nachricht"
+```
+
+### Beispiel:
+```sh
+git add .
+git commit -m "Füge neue Funktionen hinzu"
+```
+
+## Zusammenfassung
+
+- **Vim**: `Esc` → `:wq` → `Enter`
+- **Nano**: `Ctrl + O` → `Enter` → `Ctrl + X`
+- **Emacs**: `Ctrl + X` `Ctrl + S` → `Ctrl + X` `Ctrl + C`
+- **Vermeiden des Editors**: `git commit -m "Meine Commit-Nachricht"`
+
+Mit diesen Anweisungen solltest du in der Lage sein, den Git-Commit-Editor erfolgreich zu schließen und deine Commit-Nachricht zu speichern.
